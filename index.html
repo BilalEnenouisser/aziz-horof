@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حروف مع عزيز - رمضان 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap');
+        
+        :root {
+            --purple: #70429e;
+            --red: #e43b40;
+            --cyan: #47b7cb;
+            --yellow: #f8dc19;
+        }
+        
+        body {
+            font-family: 'Cairo', sans-serif;
+        }
+        
+        .ramadan-pattern {
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(112, 66, 158, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(228, 59, 64, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(71, 183, 203, 0.1) 0%, transparent 50%);
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #70429e 0%, #e43b40 50%, #47b7cb 100%);
+        }
+        
+        .letter-card {
+            transition: all 0.3s ease;
+            background: white;
+            color: #1f2937;
+        }
+        
+        .letter-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(112, 66, 158, 0.2);
+        }
+        
+        .letter-card label {
+            color: #1f2937 !important;
+        }
+        
+        .letter-card input {
+            color: #1f2937 !important;
+        }
+        
+        .letter-badge {
+            background: linear-gradient(135deg, var(--purple) 0%, var(--cyan) 100%);
+        }
+        
+        .input-focus:focus {
+            border-color: var(--purple);
+            box-shadow: 0 0 0 3px rgba(112, 66, 158, 0.1);
+        }
+        
+        .select-focus:focus {
+            border-color: var(--purple);
+            box-shadow: 0 0 0 3px rgba(112, 66, 158, 0.1);
+        }
+        
+        .btn-submit {
+            background: linear-gradient(135deg, var(--purple) 0%, var(--red) 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(112, 66, 158, 0.4);
+        }
+        
+        .star-decoration {
+            animation: twinkle 2s ease-in-out infinite;
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.1); }
+        }
+        
+        .crescent {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            box-shadow: -15px 0 0 0 var(--yellow);
+        }
+        
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, var(--purple) 0%, var(--cyan) 100%);
+            border-radius: 10px;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, var(--red) 0%, var(--purple) 100%);
+        }
+    </style>
+</head>
+<body class="ramadan-pattern min-h-screen">
+    <!-- Banner Section -->
+    <div class="relative w-full mb-8 overflow-hidden h-[30vh] md:h-auto">
+        <!-- Mobile Banner -->
+        <img src="banner-mobile.png" alt="Banner" class="block md:hidden w-full h-full object-cover">
+        <!-- Desktop Banner -->
+        <img src="banner-desktop.png" alt="Banner" class="hidden md:block w-full h-auto object-cover">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+        <div class="absolute top-4 right-4 floating">
+            <img src="logo.png" alt="Logo" class="h-20 w-auto drop-shadow-lg">
+        </div>
+    </div>
+
+    <div class="max-w-5xl mx-auto px-4 pb-12 relative">
+        <!-- Decorative Elements -->
+        <div class="absolute top-20 left-10 w-20 h-20 opacity-20 floating">
+            <div class="crescent" style="box-shadow: -15px 0 0 0 #f8dc19;"></div>
+        </div>
+        <div class="absolute top-40 right-20 w-16 h-16 opacity-15 star-decoration">
+            <span class="text-6xl text-[#47b7cb]">⭐</span>
+        </div>
+        
+        <!-- Header -->
+        <div class="text-center mb-10 relative z-10">
+            <div class="inline-block mb-4">
+                <h1 class="text-5xl md:text-6xl font-bold mb-3 drop-shadow-lg" style="color: #482f6d;">
+                    حروف مع عزيز
+                </h1>
+                <div class="flex items-center justify-center gap-3 mb-2">
+                    <span class="text-3xl star-decoration" style="animation-delay: 0s;">✨</span>
+                    <p class="text-xl md:text-2xl font-bold" style="color: #482f6d;">رمضان 2026</p>
+                    <span class="text-3xl star-decoration" style="animation-delay: 1s;">✨</span>
+                </div>
+            </div>
+            <p class="text-lg text-gray-700 font-semibold">ساعدنا في إثراء المحتوى بإجاباتك المميزة</p>
+        </div>
+
+        <!-- Form -->
+        <form id="helpForm" class="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-6 md:p-10 border-2 border-[#70429e]/20">
+            <!-- Name and Email Row -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <!-- Name -->
+                <div>
+                    <label for="name" class="block text-right text-gray-800 font-bold mb-2 text-lg">
+                        الاسم <span class="text-[#e43b40]">*</span>
+                    </label>
+                    <input type="text" id="name" name="name" required
+                        class="w-full px-5 py-4 border-2 border-gray-200 rounded-xl input-focus text-right text-gray-800 placeholder-gray-400 transition-all"
+                        placeholder="أدخل اسمك">
+                </div>
+
+                <!-- Email -->
+                <div>
+                    <label for="email" class="block text-right text-gray-800 font-bold mb-2 text-lg">
+                        البريد الإلكتروني <span class="text-[#e43b40]">*</span>
+                    </label>
+                    <input type="email" id="email" name="email" required
+                        class="w-full px-5 py-4 border-2 border-gray-200 rounded-xl input-focus text-right text-gray-800 placeholder-gray-400 transition-all"
+                        placeholder="example@email.com">
+                </div>
+            </div>
+
+            <!-- Phone and X Account Row -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <!-- Phone -->
+                <div>
+                    <label for="phone" class="block text-right text-gray-800 font-bold mb-2 text-lg">
+                        رقم الهاتف <span class="text-[#e43b40]">*</span>
+                    </label>
+                    <input type="tel" id="phone" name="phone" required
+                        class="w-full px-5 py-4 border-2 border-gray-200 rounded-xl input-focus text-right text-gray-800 placeholder-gray-400 transition-all"
+                        placeholder="05xxxxxxxx">
+                </div>
+
+                <!-- Your Account in X -->
+                <div>
+                    <label for="competitionX" class="block text-right text-gray-800 font-bold mb-2 text-lg">
+                        حسابك في X
+                    </label>
+                    <input type="text" id="competitionX" name="competitionX"
+                        class="w-full px-5 py-4 border-2 border-gray-200 rounded-xl input-focus text-right text-gray-800 placeholder-gray-400 transition-all"
+                        placeholder="حسابك في X">
+                </div>
+            </div>
+
+            <!-- Category Dropdown -->
+            <div class="mb-6">
+                <label for="category" class="block text-right text-gray-800 font-bold mb-2 text-lg">
+                    اختر المجال <span class="text-[#e43b40]">*</span>
+                </label>
+                <select id="category" name="category" required
+                    class="w-full px-5 py-4 border-2 border-gray-200 rounded-xl select-focus text-right bg-white text-gray-800 font-medium transition-all cursor-pointer">
+                    <option value="">-- اختر المجال --</option>
+                    <option value="رياضة">رياضة</option>
+                    <option value="ثقافة">ثقافة</option>
+                    <option value="فن">فن</option>
+                    <option value="تاريخ">تاريخ</option>
+                    <option value="جغرافيا">جغرافيا</option>
+                    <option value="دين">دين</option>
+                    <option value="الغاز">الغاز</option>
+                    <option value="اللغة العربية مثل الكلمة ومعناها أو مرادفها والكلمة وعكسها">اللغة العربية مثل الكلمة ومعناها أو مرادفها والكلمة وعكسها</option>
+                    <option value="ادب و شعر">ادب و شعر</option>
+                    <option value="امثال">امثال</option>
+                    <option value="طب">طب</option>
+                    <option value="علوم">علوم</option>
+                    <option value="قران">قران</option>
+                    <option value="شخصيات مشهورة عربية">شخصيات مشهورة عربية</option>
+                    <option value="معلومات عامة">معلومات عامة</option>
+                    <option value="السعودية">السعودية</option>
+                    <option value="وطنية">وطنية</option>
+                    <option value="تاريخ اسلامي">تاريخ اسلامي</option>
+                    <option value="الانبياء و الصحابة">الانبياء و الصحابة</option>
+                    <option value="عواصم ودول">عواصم ودول</option>
+                    <option value="السيارات">السيارات</option>
+                    <option value="الطبيعة">الطبيعة</option>
+                    <option value="التقنية">التقنية</option>
+                </select>
+            </div>
+
+            <!-- Letters Section (Hidden initially) -->
+            <div id="lettersSection" class="hidden mb-8 relative z-10" style="visibility: visible !important; opacity: 1 !important;">
+                <div class="mb-6 p-4 rounded-xl gradient-bg text-white">
+                    <h3 class="text-2xl font-bold mb-2 text-right flex items-center gap-2">
+                        <span>✨</span>
+                        <span>أدخل الكلمات والإجابات لكل حرف</span>
+                    </h3>
+                    <p class="text-right text-white/90">املأ الحقول المتاحة حسب معرفتك</p>
+                </div>
+                <div id="lettersContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4 pb-4" style="visibility: visible !important; opacity: 1 !important;"></div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="mt-10">
+                <button type="submit" id="submitBtn"
+                    class="w-full btn-submit text-white font-bold py-5 px-8 rounded-xl text-xl shadow-xl disabled:opacity-50 disabled:cursor-not-allowed">
+                    <span class="flex items-center justify-center gap-2">
+                        <span>إرسال المساعدة</span>
+                        <span>🚀</span>
+                    </span>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Thank You Popup -->
+    <div id="thankYouPopup" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md mx-4 text-center relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-[#70429e]/10 to-[#47b7cb]/10 rounded-full -mr-16 -mt-16"></div>
+            <div class="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-[#e43b40]/10 to-[#f8dc19]/10 rounded-full -ml-12 -mb-12"></div>
+            <div class="relative z-10">
+                <div class="mb-6">
+                    <div class="mx-auto w-20 h-20 rounded-full gradient-bg flex items-center justify-center mb-4">
+                        <svg class="h-12 w-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                    </div>
+                </div>
+                <h2 class="text-3xl font-bold mb-4" style="color: #482f6d;">شكراً لك!</h2>
+                <p class="text-gray-700 mb-8 text-lg leading-relaxed">نشكرك على مساعدتك في إثراء المحتوى. تم إرسال إجاباتك بنجاح.</p>
+                <button onclick="closePopup()" class="btn-submit text-white font-bold py-3 px-8 rounded-xl transition duration-200 shadow-lg hover:shadow-xl">
+                    موافق
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Arabic letters with their names
+        const arabicLetters = [
+            { name: "ألف", letter: "أ" },
+            { name: "باء", letter: "ب" },
+            { name: "تاء", letter: "ت" },
+            { name: "ثاء", letter: "ث" },
+            { name: "جيم", letter: "ج" },
+            { name: "حاء", letter: "ح" },
+            { name: "خاء", letter: "خ" },
+            { name: "دال", letter: "د" },
+            { name: "ذال", letter: "ذ" },
+            { name: "راء", letter: "ر" },
+            { name: "زاي", letter: "ز" },
+            { name: "سين", letter: "س" },
+            { name: "شين", letter: "ش" },
+            { name: "صاد", letter: "ص" },
+            { name: "ضاد", letter: "ض" },
+            { name: "طاء", letter: "ط" },
+            { name: "ظاء", letter: "ظ" },
+            { name: "عين", letter: "ع" },
+            { name: "غين", letter: "غ" },
+            { name: "فاء", letter: "ف" },
+            { name: "قاف", letter: "ق" },
+            { name: "كاف", letter: "ك" },
+            { name: "لام", letter: "ل" },
+            { name: "ميم", letter: "م" },
+            { name: "نون", letter: "ن" },
+            { name: "هاء", letter: "هـ" },
+            { name: "واو", letter: "و" },
+            { name: "ياء", letter: "ي" }
+        ];
+
+        const categorySelect = document.getElementById('category');
+        const lettersSection = document.getElementById('lettersSection');
+        const lettersContainer = document.getElementById('lettersContainer');
+
+        // Show letters when category is selected
+        categorySelect.addEventListener('change', function() {
+            if (this.value) {
+                lettersSection.classList.remove('hidden');
+                lettersSection.style.visibility = 'visible';
+                lettersSection.style.opacity = '1';
+                lettersSection.style.display = 'block';
+                generateLetterInputs();
+            } else {
+                lettersSection.classList.add('hidden');
+                lettersContainer.innerHTML = '';
+            }
+        });
+
+        function generateLetterInputs() {
+            lettersContainer.innerHTML = '';
+            
+            const colors = [
+                'from-[#70429e] to-[#47b7cb]',
+                'from-[#e43b40] to-[#70429e]',
+                'from-[#47b7cb] to-[#e43b40]',
+                'from-[#f8dc19] to-[#70429e]',
+                'from-[#70429e] to-[#f8dc19]',
+                'from-[#e43b40] to-[#47b7cb]'
+            ];
+            
+            arabicLetters.forEach((item, index) => {
+                const colorClass = colors[index % colors.length];
+                const letterDiv = document.createElement('div');
+                letterDiv.className = 'letter-card p-4 rounded-xl border-2 border-gray-100';
+                letterDiv.innerHTML = `
+                    <div class="flex items-start gap-4">
+                        <div class="flex-shrink-0 w-14 h-14 letter-badge rounded-xl flex items-center justify-center shadow-lg">
+                            <span class="text-2xl font-bold text-white">${item.letter}</span>
+                        </div>
+                        <div class="flex-grow">
+                            <label class="block text-sm font-bold mb-2" style="color: #1f2937 !important;">${item.name} (${item.letter})</label>
+                            <div class="space-y-2">
+                                <input type="text" 
+                                       name="word_${index}" 
+                                       data-letter="${item.letter}"
+                                       placeholder="الكلمة التي تبدأ بـ ${item.letter}"
+                                       class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg input-focus text-right text-sm transition-all"
+                                       style="color: #1f2937 !important; background-color: white !important;">
+                                <input type="text" 
+                                       name="answer_${index}" 
+                                       data-letter="${item.letter}"
+                                       placeholder="الإجابة المتعلقة بالكلمة"
+                                       class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg input-focus text-right text-sm transition-all"
+                                       style="color: #1f2937 !important; background-color: white !important;">
+                            </div>
+                        </div>
+                    </div>
+                `;
+                lettersContainer.appendChild(letterDiv);
+            });
+        }
+
+        // Form submission
+        document.getElementById('helpForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Collect form data
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                competitionX: document.getElementById('competitionX').value,
+                category: document.getElementById('category').value,
+                answers: []
+            };
+
+            // Collect all word-answer pairs
+            const wordInputs = document.querySelectorAll('input[name^="word_"]');
+            wordInputs.forEach(wordInput => {
+                const index = wordInput.name.split('_')[1];
+                const answerInput = document.querySelector(`input[name="answer_${index}"]`);
+                const letter = wordInput.dataset.letter;
+                
+                if (wordInput.value.trim() || answerInput.value.trim()) {
+                    formData.answers.push({
+                        letter: letter,
+                        word: wordInput.value.trim(),
+                        answer: answerInput.value.trim()
+                    });
+                }
+            });
+
+            // Log data (for now - will be sent to backend later)
+            console.log('Form Data:', formData);
+            
+            // Here you would send data to backend
+            // For now, we'll just show the popup
+            showThankYouPopup();
+            
+            // Reset form
+            this.reset();
+            lettersSection.classList.add('hidden');
+            lettersContainer.innerHTML = '';
+        });
+
+        function showThankYouPopup() {
+            document.getElementById('thankYouPopup').classList.remove('hidden');
+        }
+
+        function closePopup() {
+            document.getElementById('thankYouPopup').classList.add('hidden');
+        }
+
+        // Close popup when clicking outside
+        document.getElementById('thankYouPopup').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closePopup();
+            }
+        });
+    </script>
+</body>
+</html>
