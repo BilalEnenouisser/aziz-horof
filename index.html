@@ -63,6 +63,70 @@
             box-shadow: 0 0 0 3px rgba(112, 66, 158, 0.1);
         }
         
+        /* Custom Dropdown Styling */
+        select {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M4 6L8 10L12 6' stroke='%2370429e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: left 0.75rem center;
+            background-size: 1.25rem;
+            padding-right: 1rem;
+            padding-left: 2.75rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-color: white;
+        }
+        
+        select:hover {
+            border-color: var(--purple);
+            background-color: #faf5ff;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M4 6L8 10L12 6' stroke='%23e43b40' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+            box-shadow: 0 2px 8px rgba(112, 66, 158, 0.15);
+        }
+        
+        select:focus {
+            border-color: var(--purple);
+            background-color: white;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M4 6L8 10L12 6' stroke='%2370429e' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+            box-shadow: 0 0 0 3px rgba(112, 66, 158, 0.1);
+        }
+        
+        select option {
+            padding: 0.75rem 1rem;
+            background-color: white;
+            color: #1f2937;
+            font-weight: 500;
+        }
+        
+        select option:hover,
+        select option:focus {
+            background-color: #f3f4f6;
+        }
+        
+        select option:checked {
+            background: linear-gradient(135deg, #70429e 0%, #e43b40 100%);
+            color: white;
+            font-weight: 600;
+        }
+        
+        /* Dropdown wrapper for better styling */
+        .select-wrapper {
+            position: relative;
+        }
+        
+        .select-wrapper::after {
+            content: '';
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+        
         .btn-submit {
             background: linear-gradient(135deg, var(--purple) 0%, var(--red) 100%);
             transition: all 0.3s ease;
@@ -157,7 +221,7 @@
 
         <!-- Form -->
         <form id="helpForm" class="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-6 md:p-10 border-2 border-[#70429e]/20">
-            <!-- Name and Email Row -->
+            <!-- Name and X Account Row -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                 <!-- Name -->
                 <div>
@@ -167,29 +231,6 @@
                     <input type="text" id="name" name="name" required
                         class="w-full px-5 py-4 border-2 border-gray-200 rounded-xl input-focus text-right text-gray-800 placeholder-gray-400 transition-all"
                         placeholder="أدخل اسمك">
-                </div>
-
-                <!-- Email -->
-                <div>
-                    <label for="email" class="block text-right text-gray-800 font-bold mb-2 text-lg">
-                        البريد الإلكتروني <span class="text-[#e43b40]">*</span>
-                    </label>
-                    <input type="email" id="email" name="email" required
-                        class="w-full px-5 py-4 border-2 border-gray-200 rounded-xl input-focus text-right text-gray-800 placeholder-gray-400 transition-all"
-                        placeholder="example@email.com">
-                </div>
-            </div>
-
-            <!-- Phone and X Account Row -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                <!-- Phone -->
-                <div>
-                    <label for="phone" class="block text-right text-gray-800 font-bold mb-2 text-lg">
-                        رقم الهاتف <span class="text-[#e43b40]">*</span>
-                    </label>
-                    <input type="tel" id="phone" name="phone" required
-                        class="w-full px-5 py-4 border-2 border-gray-200 rounded-xl input-focus text-right text-gray-800 placeholder-gray-400 transition-all"
-                        placeholder="05xxxxxxxx">
                 </div>
 
                 <!-- Your Account in X -->
@@ -203,51 +244,96 @@
                 </div>
             </div>
 
-            <!-- Category Dropdown -->
-            <div class="mb-6">
-                <label for="category" class="block text-right text-gray-800 font-bold mb-2 text-lg">
-                    اختر المجال <span class="text-[#e43b40]">*</span>
-                </label>
-                <select id="category" name="category" required
-                    class="w-full px-5 py-4 border-2 border-gray-200 rounded-xl select-focus text-right bg-white text-gray-800 font-medium transition-all cursor-pointer">
-                    <option value="">-- اختر المجال --</option>
-                    <option value="رياضة">رياضة</option>
-                    <option value="ثقافة">ثقافة</option>
-                    <option value="فن">فن</option>
-                    <option value="تاريخ">تاريخ</option>
-                    <option value="جغرافيا">جغرافيا</option>
-                    <option value="دين">دين</option>
-                    <option value="الغاز">الغاز</option>
-                    <option value="اللغة العربية مثل الكلمة ومعناها أو مرادفها والكلمة وعكسها">اللغة العربية مثل الكلمة ومعناها أو مرادفها والكلمة وعكسها</option>
-                    <option value="ادب و شعر">ادب و شعر</option>
-                    <option value="امثال">امثال</option>
-                    <option value="طب">طب</option>
-                    <option value="علوم">علوم</option>
-                    <option value="قران">قران</option>
-                    <option value="شخصيات مشهورة عربية">شخصيات مشهورة عربية</option>
-                    <option value="معلومات عامة">معلومات عامة</option>
-                    <option value="السعودية">السعودية</option>
-                    <option value="وطنية">وطنية</option>
-                    <option value="تاريخ اسلامي">تاريخ اسلامي</option>
-                    <option value="الانبياء و الصحابة">الانبياء و الصحابة</option>
-                    <option value="عواصم ودول">عواصم ودول</option>
-                    <option value="السيارات">السيارات</option>
-                    <option value="الطبيعة">الطبيعة</option>
-                    <option value="التقنية">التقنية</option>
-                </select>
-            </div>
-
-            <!-- Letters Section (Hidden initially) -->
-            <div id="lettersSection" class="hidden mb-8 relative z-10" style="visibility: visible !important; opacity: 1 !important;">
+            <!-- Question Forms Section -->
+            <div id="questionFormsContainer" class="mb-6">
                 <div class="mb-6 p-4 rounded-xl gradient-bg text-white">
                     <h3 class="text-2xl font-bold mb-2 text-right flex items-center gap-2">
                         <span>✨</span>
-                        <span>أدخل الكلمات والإجابات لكل حرف</span>
+                        <span>أدخل السؤال والإجابة</span>
                     </h3>
-                    <p class="text-right text-white/90">املأ الحقول المتاحة حسب معرفتك</p>
                 </div>
-                <div id="lettersContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4 pb-4" style="visibility: visible !important; opacity: 1 !important;"></div>
+                
+                <!-- Question Forms Container -->
+                <div id="questionsContainer" class="space-y-6">
+                    <!-- First Question Form -->
+                    <div class="question-form-block bg-white p-6 rounded-xl border-2 border-gray-100 shadow-sm">
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                            <!-- Category -->
+                            <div>
+                                <label class="block text-right text-gray-800 font-bold mb-2 text-lg">
+                                    مجال السؤال <span class="text-[#e43b40]">*</span>
+                                </label>
+                                <select name="questionCategory" required
+                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl select-focus text-right bg-white text-gray-800 font-medium transition-all cursor-pointer text-sm question-category">
+                                    <option value="">-- اختر المجال --</option>
+                                    <option value="رياضة">رياضة</option>
+                                    <option value="ثقافة">ثقافة</option>
+                                    <option value="فن">فن</option>
+                                    <option value="تاريخ">تاريخ</option>
+                                    <option value="جغرافيا">جغرافيا</option>
+                                    <option value="دين">دين</option>
+                                    <option value="الغاز">الغاز</option>
+                                    <option value="اللغة العربية مثل الكلمة ومعناها أو مرادفها والكلمة وعكسها">اللغة العربية مثل الكلمة ومعناها أو مرادفها والكلمة وعكسها</option>
+                                    <option value="ادب و شعر">ادب و شعر</option>
+                                    <option value="امثال">امثال</option>
+                                    <option value="طب">طب</option>
+                                    <option value="علوم">علوم</option>
+                                    <option value="قران">قران</option>
+                                    <option value="شخصيات مشهورة عربية">شخصيات مشهورة عربية</option>
+                                    <option value="معلومات عامة">معلومات عامة</option>
+                                    <option value="السعودية">السعودية</option>
+                                    <option value="وطنية">وطنية</option>
+                                    <option value="تاريخ اسلامي">تاريخ اسلامي</option>
+                                    <option value="الانبياء و الصحابة">الانبياء و الصحابة</option>
+                                    <option value="عواصم ودول">عواصم ودول</option>
+                                    <option value="السيارات">السيارات</option>
+                                    <option value="الطبيعة">الطبيعة</option>
+                                    <option value="التقنية">التقنية</option>
+                                </select>
+                            </div>
+
+                            <!-- Question -->
+                            <div>
+                                <label class="block text-right text-gray-800 font-bold mb-2 text-lg">
+                                    السؤال <span class="text-[#e43b40]">*</span>
+                                </label>
+                                <input type="text" name="question" required
+                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl input-focus text-right text-gray-800 placeholder-gray-400 transition-all text-sm"
+                                    placeholder="أدخل السؤال">
+                            </div>
+
+                            <!-- Letter -->
+                            <div>
+                                <label class="block text-right text-gray-800 font-bold mb-2 text-lg">
+                                    الحرف <span class="text-[#e43b40]">*</span>
+                                </label>
+                                <select name="letter" required
+                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl select-focus text-right bg-white text-gray-800 font-medium transition-all cursor-pointer text-sm question-letter">
+                                    <option value="">-- اختر الحرف --</option>
+                                </select>
+                            </div>
+
+                            <!-- Answer -->
+                            <div>
+                                <label class="block text-right text-gray-800 font-bold mb-2 text-lg">
+                                    الاجابة <span class="text-[#e43b40]">*</span>
+                                </label>
+                                <input type="text" name="answer" required
+                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl input-focus text-right text-gray-800 placeholder-gray-400 transition-all text-sm"
+                                    placeholder="أدخل الإجابة">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Add Question Button -->
+                <div class="mt-4">
+                    <button type="button" id="addQuestionBtn" class="w-full bg-[#47b7cb] hover:bg-[#3aa5b8] text-white font-bold py-3 px-6 rounded-xl transition duration-200 shadow-lg hover:shadow-xl">
+                        إضافة سؤال آخر
+                    </button>
+                </div>
             </div>
+
 
             <!-- Submit Button -->
             <div class="mt-10">
@@ -269,15 +355,37 @@
             <div class="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-[#e43b40]/10 to-[#f8dc19]/10 rounded-full -ml-12 -mb-12"></div>
             <div class="relative z-10">
                 <div class="mb-6">
-                    <div class="mx-auto w-20 h-20 rounded-full gradient-bg flex items-center justify-center mb-4">
+                    <div class="mx-auto w-20 h-20 rounded-full gradient-bg flex items-center justify-center mb-4 shadow-lg">
                         <svg class="h-12 w-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
                         </svg>
                     </div>
                 </div>
-                <h2 class="text-3xl font-bold mb-4" style="color: #482f6d;">شكراً لك!</h2>
+                <h2 class="text-3xl font-bold mb-4" style="color: #482f6d;">شكراً لك! ✨</h2>
                 <p class="text-gray-700 mb-8 text-lg leading-relaxed">نشكرك على مساعدتك في إثراء المحتوى. تم إرسال إجاباتك بنجاح.</p>
-                <button onclick="closePopup()" class="btn-submit text-white font-bold py-3 px-8 rounded-xl transition duration-200 shadow-lg hover:shadow-xl">
+                <button onclick="closeThankYouPopup()" class="btn-submit text-white font-bold py-3 px-8 rounded-xl transition duration-200 shadow-lg hover:shadow-xl">
+                    موافق
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Validation Error Popup -->
+    <div id="validationPopup" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md mx-4 text-center relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-[#e43b40]/10 to-[#70429e]/10 rounded-full -mr-16 -mt-16"></div>
+            <div class="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-[#e43b40]/10 to-[#f8dc19]/10 rounded-full -ml-12 -mb-12"></div>
+            <div class="relative z-10">
+                <div class="mb-6">
+                    <div class="mx-auto w-20 h-20 rounded-full bg-red-500 flex items-center justify-center mb-4 shadow-lg">
+                        <svg class="h-12 w-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </div>
+                </div>
+                <h2 class="text-3xl font-bold mb-4" style="color: #e43b40;">تنبيه! ⚠️</h2>
+                <p id="validationMessage" class="text-gray-700 mb-8 text-lg leading-relaxed">يرجى ملء جميع الحقول في السؤال الحالي قبل إضافة سؤال جديد</p>
+                <button onclick="closeValidationPopup()" class="bg-[#e43b40] hover:bg-[#d32f2f] text-white font-bold py-3 px-8 rounded-xl transition duration-200 shadow-lg hover:shadow-xl">
                     موافق
                 </button>
             </div>
@@ -317,97 +425,161 @@
             { name: "ياء", letter: "ي" }
         ];
 
-        const categorySelect = document.getElementById('category');
-        const lettersSection = document.getElementById('lettersSection');
-        const lettersContainer = document.getElementById('lettersContainer');
+        const questionsContainer = document.getElementById('questionsContainer');
+        const addQuestionBtn = document.getElementById('addQuestionBtn');
 
-        // Show letters when category is selected
-        categorySelect.addEventListener('change', function() {
-            if (this.value) {
-                lettersSection.classList.remove('hidden');
-                lettersSection.style.visibility = 'visible';
-                lettersSection.style.opacity = '1';
-                lettersSection.style.display = 'block';
-                generateLetterInputs();
-            } else {
-                lettersSection.classList.add('hidden');
-                lettersContainer.innerHTML = '';
+        // Function to populate letter dropdown
+        function populateLetterDropdown(selectElement) {
+            // Clear existing options except the first one
+            while (selectElement.options.length > 1) {
+                selectElement.remove(1);
             }
-        });
-
-        function generateLetterInputs() {
-            lettersContainer.innerHTML = '';
-            
-            const colors = [
-                'from-[#70429e] to-[#47b7cb]',
-                'from-[#e43b40] to-[#70429e]',
-                'from-[#47b7cb] to-[#e43b40]',
-                'from-[#f8dc19] to-[#70429e]',
-                'from-[#70429e] to-[#f8dc19]',
-                'from-[#e43b40] to-[#47b7cb]'
-            ];
-            
-            arabicLetters.forEach((item, index) => {
-                const colorClass = colors[index % colors.length];
-                const letterDiv = document.createElement('div');
-                letterDiv.className = 'letter-card p-4 rounded-xl border-2 border-gray-100';
-                letterDiv.innerHTML = `
-                    <div class="flex items-start gap-4">
-                        <div class="flex-shrink-0 w-14 h-14 letter-badge rounded-xl flex items-center justify-center shadow-lg">
-                            <span class="text-2xl font-bold text-white">${item.letter}</span>
-                        </div>
-                        <div class="flex-grow">
-                            <label class="block text-sm font-bold mb-2" style="color: #1f2937 !important;">${item.name} (${item.letter})</label>
-                            <div class="space-y-2">
-                                <input type="text" 
-                                       name="word_${index}" 
-                                       data-letter="${item.letter}"
-                                       placeholder="الكلمة التي تبدأ بـ ${item.letter}"
-                                       class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg input-focus text-right text-sm transition-all"
-                                       style="color: #1f2937 !important; background-color: white !important;">
-                                <input type="text" 
-                                       name="answer_${index}" 
-                                       data-letter="${item.letter}"
-                                       placeholder="الإجابة المتعلقة بالكلمة"
-                                       class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg input-focus text-right text-sm transition-all"
-                                       style="color: #1f2937 !important; background-color: white !important;">
-                            </div>
-                        </div>
-                    </div>
-                `;
-                lettersContainer.appendChild(letterDiv);
+            // Add letter options
+            arabicLetters.forEach((item) => {
+                const option = document.createElement('option');
+                option.value = item.letter;
+                option.textContent = `${item.name} (${item.letter})`;
+                selectElement.appendChild(option);
             });
         }
+
+        // Populate letter dropdowns on page load
+        function initializeLetterDropdowns() {
+            const letterSelects = document.querySelectorAll('.question-letter');
+            letterSelects.forEach(select => {
+                populateLetterDropdown(select);
+            });
+        }
+
+        // Initialize on page load
+        initializeLetterDropdowns();
+
+        // Function to validate if a form is completely filled
+        function isFormFilled(form) {
+            const category = form.querySelector('select[name="questionCategory"]').value.trim();
+            const question = form.querySelector('input[name="question"]').value.trim();
+            const letter = form.querySelector('select[name="letter"]').value.trim();
+            const answer = form.querySelector('input[name="answer"]').value.trim();
+            
+            return category && question && letter && answer;
+        }
+
+        // Add new question form
+        addQuestionBtn.addEventListener('click', function() {
+            // Get all existing question forms
+            const existingForms = document.querySelectorAll('.question-form-block');
+            
+            // Validate all existing forms are filled
+            for (let i = 0; i < existingForms.length; i++) {
+                if (!isFormFilled(existingForms[i])) {
+                    // Show validation popup
+                    showValidationPopup('يرجى ملء جميع الحقول في السؤال الحالي قبل إضافة سؤال جديد');
+                    // Scroll to the incomplete form
+                    existingForms[i].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    // Highlight the incomplete form
+                    existingForms[i].style.borderColor = '#e43b40';
+                    existingForms[i].style.boxShadow = '0 0 0 3px rgba(228, 59, 64, 0.2)';
+                    setTimeout(() => {
+                        existingForms[i].style.borderColor = '';
+                        existingForms[i].style.boxShadow = '';
+                    }, 2000);
+                    return;
+                }
+            }
+
+            // Get the first question form as template
+            const firstForm = document.querySelector('.question-form-block');
+            if (!firstForm) return;
+
+            // Clone the form
+            const newForm = firstForm.cloneNode(true);
+            
+            // Remove any existing remove button from the clone
+            const existingRemoveBtn = newForm.querySelector('button[type="button"]');
+            if (existingRemoveBtn && existingRemoveBtn.textContent.includes('حذف')) {
+                existingRemoveBtn.remove();
+            }
+            
+            // Clear all input values in the new form
+            const inputs = newForm.querySelectorAll('input[type="text"]');
+            inputs.forEach(input => input.value = '');
+            
+            const selects = newForm.querySelectorAll('select');
+            selects.forEach(select => {
+                select.value = '';
+                // Repopulate letter dropdown if it's a letter select
+                if (select.classList.contains('question-letter')) {
+                    populateLetterDropdown(select);
+                }
+            });
+
+            // Add remove button to the new form
+            const removeBtn = document.createElement('button');
+            removeBtn.type = 'button';
+            removeBtn.className = 'mt-4 w-full bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg transition duration-200';
+            removeBtn.textContent = 'حذف هذا السؤال';
+            removeBtn.onclick = function() {
+                newForm.remove();
+            };
+            newForm.appendChild(removeBtn);
+
+            // Append to container
+            questionsContainer.appendChild(newForm);
+            
+            // Re-populate letter dropdown in the new form
+            const newLetterSelect = newForm.querySelector('.question-letter');
+            if (newLetterSelect) {
+                populateLetterDropdown(newLetterSelect);
+            }
+        });
 
         // Form submission
         document.getElementById('helpForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
+            // Collect all questions from all forms
+            const questionForms = document.querySelectorAll('.question-form-block');
+            const questions = [];
+            let hasErrors = false;
+
+            questionForms.forEach((form, index) => {
+                const category = form.querySelector('select[name="questionCategory"]').value;
+                const question = form.querySelector('input[name="question"]').value;
+                const letter = form.querySelector('select[name="letter"]').value;
+                const answer = form.querySelector('input[name="answer"]').value;
+
+                // Validate required fields
+                if (!category || !question || !letter || !answer) {
+                    hasErrors = true;
+                    return;
+                }
+
+                questions.push({
+                    category: category,
+                    question: question,
+                    letter: letter,
+                    answer: answer
+                });
+            });
+
+            // Check if at least one question is added
+            if (questions.length === 0) {
+                alert('يرجى إضافة سؤال واحد على الأقل وملء جميع الحقول');
+                return;
+            }
+
+            // Check for validation errors
+            if (hasErrors) {
+                alert('يرجى ملء جميع الحقول في جميع الأسئلة');
+                return;
+            }
+            
             // Collect form data
             const formData = {
                 name: document.getElementById('name').value,
-                email: document.getElementById('email').value,
-                phone: document.getElementById('phone').value,
                 competitionX: document.getElementById('competitionX').value,
-                category: document.getElementById('category').value,
-                answers: []
+                questions: questions
             };
-
-            // Collect all word-answer pairs
-            const wordInputs = document.querySelectorAll('input[name^="word_"]');
-            wordInputs.forEach(wordInput => {
-                const index = wordInput.name.split('_')[1];
-                const answerInput = document.querySelector(`input[name="answer_${index}"]`);
-                const letter = wordInput.dataset.letter;
-                
-                if (wordInput.value.trim() || answerInput.value.trim()) {
-                    formData.answers.push({
-                        letter: letter,
-                        word: wordInput.value.trim(),
-                        answer: answerInput.value.trim()
-                    });
-                }
-            });
 
             // Log data (for now - will be sent to backend later)
             console.log('Form Data:', formData);
@@ -418,22 +590,47 @@
             
             // Reset form
             this.reset();
-            lettersSection.classList.add('hidden');
-            lettersContainer.innerHTML = '';
+            // Reset all question forms to first one
+            const firstForm = questionForms[0];
+            questionsContainer.innerHTML = '';
+            questionsContainer.appendChild(firstForm);
+            // Clear first form
+            firstForm.querySelectorAll('input[type="text"]').forEach(input => input.value = '');
+            firstForm.querySelectorAll('select').forEach(select => select.value = '');
+            // Re-initialize letter dropdowns
+            initializeLetterDropdowns();
         });
 
         function showThankYouPopup() {
             document.getElementById('thankYouPopup').classList.remove('hidden');
         }
 
-        function closePopup() {
+        function closeThankYouPopup() {
             document.getElementById('thankYouPopup').classList.add('hidden');
         }
 
-        // Close popup when clicking outside
+        function showValidationPopup(message) {
+            const validationMessage = document.getElementById('validationMessage');
+            if (validationMessage) {
+                validationMessage.textContent = message;
+            }
+            document.getElementById('validationPopup').classList.remove('hidden');
+        }
+
+        function closeValidationPopup() {
+            document.getElementById('validationPopup').classList.add('hidden');
+        }
+
+        // Close popups when clicking outside
         document.getElementById('thankYouPopup').addEventListener('click', function(e) {
             if (e.target === this) {
-                closePopup();
+                closeThankYouPopup();
+            }
+        });
+
+        document.getElementById('validationPopup').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeValidationPopup();
             }
         });
     </script>
