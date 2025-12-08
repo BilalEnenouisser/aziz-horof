@@ -344,7 +344,8 @@
                     </div>
                 </div>
                 <h2 class="text-3xl font-bold mb-4" style="color: #482f6d;">شكراً لك! ✨</h2>
-                <p class="text-gray-700 mb-8 text-lg leading-relaxed">نشكرك على مساعدتك في إثراء المحتوى. تم إرسال إجاباتك بنجاح.</p>
+                <p class="text-gray-700 mb-4 text-lg leading-relaxed">نشكرك على مساعدتك في إثراء المحتوى. تم إرسال إجاباتك بنجاح.</p>
+                <p id="remainingSubmissionsText" class="text-[#70429e] font-bold text-xl mb-8 hidden"></p>
                 <button onclick="closeThankYouPopup()" class="btn-submit text-white font-bold py-3 px-8 rounded-xl transition duration-200 shadow-lg hover:shadow-xl">
                     موافق
                 </button>
@@ -439,9 +440,9 @@
 
         // Rate Limiting Configuration
         const RATE_LIMIT_CONFIG = {
-            maxSubmissions: 5, // Maximum submissions per hour
-            blockDuration: 24 * 60 * 60 * 1000, // 24 hours in milliseconds
-            minTimeBetweenSubmissions: 30 * 1000 // Minimum 30 seconds between submissions
+            maxSubmissions: 6, // Maximum submissions per hour
+            blockDuration: 12 * 60 * 60 * 1000, // 12 hours in milliseconds
+            minTimeBetweenSubmissions: 40 * 1000 // Minimum 40 seconds between submissions
         };
 
         // Rate Limiting Functions
@@ -455,12 +456,29 @@
             
             const { timestamp, reason } = JSON.parse(blockData);
             const now = Date.now();
+            const timeElapsed = now - timestamp;
             
-            if (now - timestamp < RATE_LIMIT_CONFIG.blockDuration) {
+            if (timeElapsed < RATE_LIMIT_CONFIG.blockDuration) {
+                const remainingMs = RATE_LIMIT_CONFIG.blockDuration - timeElapsed;
+                const remainingHours = Math.floor(remainingMs / (60 * 60 * 1000));
+                const remainingMinutes = Math.floor((remainingMs % (60 * 60 * 1000)) / (60 * 1000));
+                
+                let remainingTimeText = '';
+                if (remainingHours > 0) {
+                    remainingTimeText = `${remainingHours} ساعة`;
+                    if (remainingMinutes > 0) {
+                        remainingTimeText += ` و ${remainingMinutes} دقيقة`;
+                    }
+                } else {
+                    remainingTimeText = `${remainingMinutes} دقيقة`;
+                }
+                
                 return {
                     blocked: true,
                     reason: reason,
-                    remainingTime: Math.ceil((RATE_LIMIT_CONFIG.blockDuration - (now - timestamp)) / (60 * 60 * 1000))
+                    remainingTime: remainingTimeText,
+                    remainingHours: remainingHours,
+                    remainingMinutes: remainingMinutes
                 };
             } else {
                 // Block expired, remove it
@@ -488,9 +506,10 @@
             // Check if too many submissions
             if (recentSubmissions.length >= RATE_LIMIT_CONFIG.maxSubmissions) {
                 blockUser('Too many submissions in short time');
+                const blockStatus = isUserBlocked();
                 return {
                     allowed: false,
-                    reason: 'تم حظرك بسبب كثرة الإرسال. يرجى المحاولة بعد 24 ساعة.'
+                    reason: `تم حظرك بسبب كثرة الإرسال. الوقت المتبقي: ${blockStatus.remainingTime}`
                 };
             }
             
@@ -501,18 +520,29 @@
                 
                 if (timeSinceLastSubmission < RATE_LIMIT_CONFIG.minTimeBetweenSubmissions) {
                     blockUser('Submissions too fast (spam detected)');
+                    const blockStatus = isUserBlocked();
                     return {
                         allowed: false,
-                        reason: 'تم حظرك بسبب الإرسال السريع المتكرر. يرجى المحاولة بعد 24 ساعة.'
+                        reason: `تم حظرك بسبب الإرسال السريع المتكرر. الوقت المتبقي: ${blockStatus.remainingTime}`
                     };
                 }
             }
             
-            // Update submissions list
+            // Calculate remaining submissions BEFORE adding current submission
+            const submissionsBefore = recentSubmissions.length;
+            const remainingBefore = RATE_LIMIT_CONFIG.maxSubmissions - submissionsBefore;
+            
+            // Update submissions list (add current submission)
             recentSubmissions.push(now);
             localStorage.setItem(getStorageKey('submissions'), JSON.stringify(recentSubmissions));
             
-            return { allowed: true };
+            // Calculate remaining AFTER adding current submission
+            const remainingAfter = remainingBefore - 1;
+            
+            return { 
+                allowed: true,
+                remainingSubmissions: remainingAfter >= 0 ? remainingAfter : 0
+            };
         }
 
         // Check if user is blocked on page load
@@ -522,7 +552,7 @@
                 const submitBtn = document.getElementById('submitBtn');
                 if (submitBtn) {
                     submitBtn.disabled = true;
-                    submitBtn.innerHTML = `<span class="flex items-center justify-center gap-2"><span>تم حظرك لمدة ${blockStatus.remainingTime} ساعة</span><span>🚫</span></span>`;
+                    submitBtn.innerHTML = `<span class="flex items-center justify-center gap-2"><span>تم حظرك - المتبقي: ${blockStatus.remainingTime}</span><span>🚫</span></span>`;
                 }
             }
         });
@@ -639,7 +669,7 @@
             // Check if user is blocked
             const blockStatus = isUserBlocked();
             if (blockStatus) {
-                showValidationPopup(`تم حظرك لمدة ${blockStatus.remainingTime} ساعة. ${blockStatus.reason}`);
+                showValidationPopup(`تم حظرك! الوقت المتبقي: ${blockStatus.remainingTime}`);
                 return;
             }
             
@@ -649,6 +679,9 @@
                 showValidationPopup(rateLimitCheck.reason);
                 return;
             }
+            
+            // Get remaining submissions count
+            const remainingSubmissions = rateLimitCheck.remainingSubmissions || 0;
             
             // Collect all questions from all forms
             const questionForms = document.querySelectorAll('.question-form-block');
@@ -708,7 +741,7 @@
                         grecaptcha.execute(RECAPTCHA_SITE_KEY, {action: 'submit'}).then(function(token) {
                             // Add token to form data
                             formData.recaptchaToken = token;
-                            submitFormData(formData, submitBtn);
+                            submitFormData(formData, submitBtn, remainingSubmissions);
                         }).catch(function(error) {
                             console.error('reCAPTCHA v3 error:', error);
                             showValidationPopup('حدث خطأ في التحقق. يرجى المحاولة مرة أخرى.');
@@ -731,7 +764,7 @@
                             
                             // Add token to form data
                             formData.recaptchaToken = token;
-                            submitFormData(formData, submitBtn);
+                            submitFormData(formData, submitBtn, remainingSubmissions);
                         } else {
                             // Widget not initialized yet
                             showValidationPopup('جارٍ تحميل reCAPTCHA. يرجى المحاولة مرة أخرى.');
@@ -742,12 +775,12 @@
                 });
             } else {
                 // No CAPTCHA configured, proceed directly
-                submitFormData(formData, submitBtn);
+                submitFormData(formData, submitBtn, remainingSubmissions);
             }
         });
 
         // Function to submit form data
-        function submitFormData(formData, submitBtn) {
+        function submitFormData(formData, submitBtn, remainingSubmissions = 0) {
             submitBtn.innerHTML = '<span class="flex items-center justify-center gap-2"><span>جاري الإرسال...</span><span>⏳</span></span>';
             
             // Send data to Google Sheets (if URL is configured)
@@ -761,8 +794,8 @@
                     body: JSON.stringify(formData)
                 })
                 .then(() => {
-                    // Success - show popup
-                    showThankYouPopup();
+                    // Success - show popup with remaining submissions
+                    showThankYouPopup(remainingSubmissions);
                     resetForm();
                 })
                 .catch((error) => {
@@ -770,7 +803,7 @@
                     console.error('Error:', error);
                     // Still show success popup (no-cors mode doesn't return response)
                     // In production, you might want to show an error popup
-                    showThankYouPopup();
+                    showThankYouPopup(remainingSubmissions);
                     resetForm();
                 })
                 .finally(() => {
@@ -781,7 +814,7 @@
             } else {
                 // No Google Sheets URL configured - just show popup
                 console.warn('Google Sheets URL not configured. Data not saved.');
-                showThankYouPopup();
+                showThankYouPopup(remainingSubmissions);
                 resetForm();
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = '<span class="flex items-center justify-center gap-2"><span>إرسال المساعدة</span><span>🚀</span></span>';
@@ -809,7 +842,17 @@
             }
         }
 
-        function showThankYouPopup() {
+        function showThankYouPopup(remainingSubmissions = 0) {
+            const remainingText = document.getElementById('remainingSubmissionsText');
+            if (remainingSubmissions > 0) {
+                remainingText.textContent = `المحاولات المتبقية: ${remainingSubmissions}`;
+                remainingText.classList.remove('hidden');
+            } else if (remainingSubmissions === 0) {
+                remainingText.textContent = 'لقد استخدمت جميع المحاولات المتاحة لهذه الساعة';
+                remainingText.classList.remove('hidden');
+            } else {
+                remainingText.classList.add('hidden');
+            }
             document.getElementById('thankYouPopup').classList.remove('hidden');
         }
 
