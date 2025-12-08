@@ -440,9 +440,8 @@
 
         // Rate Limiting Configuration
         const RATE_LIMIT_CONFIG = {
-            maxSubmissions: 6, // Maximum submissions per hour
-            blockDuration: 12 * 60 * 60 * 1000, // 12 hours in milliseconds
-            minTimeBetweenSubmissions: 40 * 1000 // Minimum 40 seconds between submissions
+            maxSubmissions: 5, // Maximum submissions per hour
+            blockDuration: 6 * 60 * 60 * 1000 // 6 hours in milliseconds
         };
 
         // Rate Limiting Functions
@@ -477,8 +476,7 @@
                     blocked: true,
                     reason: reason,
                     remainingTime: remainingTimeText,
-                    remainingHours: remainingHours,
-                    remainingMinutes: remainingMinutes
+                    remainingHours: remainingHours
                 };
             } else {
                 // Block expired, remove it
@@ -509,30 +507,14 @@
                 const blockStatus = isUserBlocked();
                 return {
                     allowed: false,
-                    reason: `تم حظرك بسبب كثرة الإرسال. الوقت المتبقي: ${blockStatus.remainingTime}`
+                    reason: `تم حظرك بسبب كثرة الإرسال. الوقت المتبقي: ${blockStatus.remainingTime} ساعة.`
                 };
             }
             
-            // Check minimum time between submissions
-            if (recentSubmissions.length > 0) {
-                const lastSubmission = recentSubmissions[recentSubmissions.length - 1];
-                const timeSinceLastSubmission = now - lastSubmission;
-                
-                if (timeSinceLastSubmission < RATE_LIMIT_CONFIG.minTimeBetweenSubmissions) {
-                    blockUser('Submissions too fast (spam detected)');
-                    const blockStatus = isUserBlocked();
-                    return {
-                        allowed: false,
-                        reason: `تم حظرك بسبب الإرسال السريع المتكرر. الوقت المتبقي: ${blockStatus.remainingTime}`
-                    };
-                }
-            }
+            // Calculate remaining submissions BEFORE adding current
+            const remainingBefore = RATE_LIMIT_CONFIG.maxSubmissions - recentSubmissions.length;
             
-            // Calculate remaining submissions BEFORE adding current submission
-            const submissionsBefore = recentSubmissions.length;
-            const remainingBefore = RATE_LIMIT_CONFIG.maxSubmissions - submissionsBefore;
-            
-            // Update submissions list (add current submission)
+            // Update submissions list
             recentSubmissions.push(now);
             localStorage.setItem(getStorageKey('submissions'), JSON.stringify(recentSubmissions));
             
@@ -680,7 +662,7 @@
                 return;
             }
             
-            // Get remaining submissions count
+            // Get remaining submissions
             const remainingSubmissions = rateLimitCheck.remainingSubmissions || 0;
             
             // Collect all questions from all forms
@@ -845,10 +827,10 @@
         function showThankYouPopup(remainingSubmissions = 0) {
             const remainingText = document.getElementById('remainingSubmissionsText');
             if (remainingSubmissions > 0) {
-                remainingText.textContent = `المحاولات المتبقية: ${remainingSubmissions}`;
+                remainingText.textContent = `المحاولات المتبقية اليوم: ${remainingSubmissions}`;
                 remainingText.classList.remove('hidden');
             } else if (remainingSubmissions === 0) {
-                remainingText.textContent = 'لقد استخدمت جميع المحاولات المتاحة لهذه الساعة';
+                remainingText.textContent = 'لقد استخدمت جميع المحاولات المتاحة لهذا اليوم';
                 remainingText.classList.remove('hidden');
             } else {
                 remainingText.classList.add('hidden');
