@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>حروف مع عزيز - رمضان 2026</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google reCAPTCHA v3 - Will be loaded dynamically if key is configured -->
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap');
         
@@ -221,29 +222,6 @@
 
         <!-- Form -->
         <form id="helpForm" class="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-6 md:p-10 border-2 border-[#70429e]/20">
-            <!-- Name and X Account Row -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                <!-- Name -->
-                <div>
-                    <label for="name" class="block text-right text-gray-800 font-bold mb-2 text-lg">
-                        الاسم <span class="text-[#e43b40]">*</span>
-                    </label>
-                    <input type="text" id="name" name="name" required
-                        class="w-full px-5 py-4 border-2 border-gray-200 rounded-xl input-focus text-right text-gray-800 placeholder-gray-400 transition-all"
-                        placeholder="أدخل اسمك">
-                </div>
-
-                <!-- Your Account in X -->
-                <div>
-                    <label for="competitionX" class="block text-right text-gray-800 font-bold mb-2 text-lg">
-                        حسابك في X
-                    </label>
-                    <input type="text" id="competitionX" name="competitionX"
-                        class="w-full px-5 py-4 border-2 border-gray-200 rounded-xl input-focus text-right text-gray-800 placeholder-gray-400 transition-all"
-                        placeholder="حسابك في X">
-                </div>
-            </div>
-
             <!-- Question Forms Section -->
             <div id="questionFormsContainer" class="mb-6">
                 <div class="mb-6 p-4 rounded-xl gradient-bg text-white">
@@ -344,6 +322,10 @@
                         <span>🚀</span>
                     </span>
                 </button>
+                <!-- reCAPTCHA v3 Badge (appears automatically in bottom-right corner) -->
+                <div class="mt-4 text-center text-sm text-gray-600">
+                    <p>يتم التحقق تلقائياً بواسطة reCAPTCHA</p>
+                </div>
             </div>
         </form>
     </div>
@@ -427,6 +409,123 @@
 
         const questionsContainer = document.getElementById('questionsContainer');
         const addQuestionBtn = document.getElementById('addQuestionBtn');
+
+        // Google Sheets Web App URL - Replace with your URL after setting up Google Apps Script
+        // Get this URL from: Google Sheets → Extensions → Apps Script → Deploy → Web app
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyHy_9inhTMovysZE_0cQNrjmeYAlUrgu5aWR9twaxBChgoNllzdIzwqaIAMbqpQBdn/exec'; // Paste your Google Apps Script Web App URL here
+
+        // reCAPTCHA Configuration
+        const RECAPTCHA_SITE_KEY = '6LdQeSQsAAAAAMHDcnWDpm1Pb3sKTdWVfreDjDkm'; // Your reCAPTCHA Site Key
+        const RECAPTCHA_VERSION = 'v3'; // This key is for reCAPTCHA v3
+        let recaptchaWidgetId = null;
+
+        // Load reCAPTCHA if key is configured
+        if (RECAPTCHA_SITE_KEY && RECAPTCHA_SITE_KEY !== 'YOUR_RECAPTCHA_SITE_KEY') {
+            const script = document.createElement('script');
+            if (RECAPTCHA_VERSION === 'v3') {
+                // reCAPTCHA v3
+                script.src = `https://www.google.com/recaptcha/api.js?render=${RECAPTCHA_SITE_KEY}`;
+            } else {
+                // reCAPTCHA v2 Invisible
+                script.src = 'https://www.google.com/recaptcha/api.js?render=explicit';
+            }
+            script.async = true;
+            script.defer = true;
+            document.head.appendChild(script);
+            
+            // reCAPTCHA v3 doesn't need widget initialization - it runs automatically
+            // The badge will appear automatically in the bottom-right corner
+        }
+
+        // Rate Limiting Configuration
+        const RATE_LIMIT_CONFIG = {
+            maxSubmissions: 5, // Maximum submissions per hour
+            blockDuration: 24 * 60 * 60 * 1000, // 24 hours in milliseconds
+            minTimeBetweenSubmissions: 30 * 1000 // Minimum 30 seconds between submissions
+        };
+
+        // Rate Limiting Functions
+        function getStorageKey(key) {
+            return `aziz_horof_${key}`;
+        }
+
+        function isUserBlocked() {
+            const blockData = localStorage.getItem(getStorageKey('blocked'));
+            if (!blockData) return false;
+            
+            const { timestamp, reason } = JSON.parse(blockData);
+            const now = Date.now();
+            
+            if (now - timestamp < RATE_LIMIT_CONFIG.blockDuration) {
+                return {
+                    blocked: true,
+                    reason: reason,
+                    remainingTime: Math.ceil((RATE_LIMIT_CONFIG.blockDuration - (now - timestamp)) / (60 * 60 * 1000))
+                };
+            } else {
+                // Block expired, remove it
+                localStorage.removeItem(getStorageKey('blocked'));
+                return false;
+            }
+        }
+
+        function blockUser(reason) {
+            const blockData = {
+                timestamp: Date.now(),
+                reason: reason
+            };
+            localStorage.setItem(getStorageKey('blocked'), JSON.stringify(blockData));
+        }
+
+        function checkRateLimit() {
+            const submissions = JSON.parse(localStorage.getItem(getStorageKey('submissions')) || '[]');
+            const now = Date.now();
+            
+            // Remove old submissions (older than 1 hour)
+            const oneHourAgo = now - (60 * 60 * 1000);
+            const recentSubmissions = submissions.filter(time => time > oneHourAgo);
+            
+            // Check if too many submissions
+            if (recentSubmissions.length >= RATE_LIMIT_CONFIG.maxSubmissions) {
+                blockUser('Too many submissions in short time');
+                return {
+                    allowed: false,
+                    reason: 'تم حظرك بسبب كثرة الإرسال. يرجى المحاولة بعد 24 ساعة.'
+                };
+            }
+            
+            // Check minimum time between submissions
+            if (recentSubmissions.length > 0) {
+                const lastSubmission = recentSubmissions[recentSubmissions.length - 1];
+                const timeSinceLastSubmission = now - lastSubmission;
+                
+                if (timeSinceLastSubmission < RATE_LIMIT_CONFIG.minTimeBetweenSubmissions) {
+                    blockUser('Submissions too fast (spam detected)');
+                    return {
+                        allowed: false,
+                        reason: 'تم حظرك بسبب الإرسال السريع المتكرر. يرجى المحاولة بعد 24 ساعة.'
+                    };
+                }
+            }
+            
+            // Update submissions list
+            recentSubmissions.push(now);
+            localStorage.setItem(getStorageKey('submissions'), JSON.stringify(recentSubmissions));
+            
+            return { allowed: true };
+        }
+
+        // Check if user is blocked on page load
+        window.addEventListener('load', function() {
+            const blockStatus = isUserBlocked();
+            if (blockStatus) {
+                const submitBtn = document.getElementById('submitBtn');
+                if (submitBtn) {
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = `<span class="flex items-center justify-center gap-2"><span>تم حظرك لمدة ${blockStatus.remainingTime} ساعة</span><span>🚫</span></span>`;
+                }
+            }
+        });
 
         // Function to populate letter dropdown
         function populateLetterDropdown(selectElement) {
@@ -537,6 +636,20 @@
         document.getElementById('helpForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
+            // Check if user is blocked
+            const blockStatus = isUserBlocked();
+            if (blockStatus) {
+                showValidationPopup(`تم حظرك لمدة ${blockStatus.remainingTime} ساعة. ${blockStatus.reason}`);
+                return;
+            }
+            
+            // Check rate limit
+            const rateLimitCheck = checkRateLimit();
+            if (!rateLimitCheck.allowed) {
+                showValidationPopup(rateLimitCheck.reason);
+                return;
+            }
+            
             // Collect all questions from all forms
             const questionForms = document.querySelectorAll('.question-form-block');
             const questions = [];
@@ -576,30 +689,125 @@
             
             // Collect form data
             const formData = {
-                name: document.getElementById('name').value,
-                competitionX: document.getElementById('competitionX').value,
                 questions: questions
             };
 
-            // Log data (for now - will be sent to backend later)
+            // Log data
             console.log('Form Data:', formData);
             
-            // Here you would send data to backend
-            // For now, we'll just show the popup
-            showThankYouPopup();
+            // Disable submit button during submission
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="flex items-center justify-center gap-2"><span>جاري التحقق...</span><span>⏳</span></span>';
             
-            // Reset form
-            this.reset();
-            // Reset all question forms to first one
-            const firstForm = questionForms[0];
-            questionsContainer.innerHTML = '';
-            questionsContainer.appendChild(firstForm);
-            // Clear first form
-            firstForm.querySelectorAll('input[type="text"]').forEach(input => input.value = '');
-            firstForm.querySelectorAll('select').forEach(select => select.value = '');
-            // Re-initialize letter dropdowns
-            initializeLetterDropdowns();
+            // Verify reCAPTCHA (if configured)
+            if (RECAPTCHA_SITE_KEY && RECAPTCHA_SITE_KEY !== 'YOUR_RECAPTCHA_SITE_KEY') {
+                grecaptcha.ready(function() {
+                    if (RECAPTCHA_VERSION === 'v3') {
+                        // reCAPTCHA v3
+                        grecaptcha.execute(RECAPTCHA_SITE_KEY, {action: 'submit'}).then(function(token) {
+                            // Add token to form data
+                            formData.recaptchaToken = token;
+                            submitFormData(formData, submitBtn);
+                        }).catch(function(error) {
+                            console.error('reCAPTCHA v3 error:', error);
+                            showValidationPopup('حدث خطأ في التحقق. يرجى المحاولة مرة أخرى.');
+                            submitBtn.disabled = false;
+                            submitBtn.innerHTML = '<span class="flex items-center justify-center gap-2"><span>إرسال المساعدة</span><span>🚀</span></span>';
+                        });
+                    } else {
+                        // reCAPTCHA v2 Checkbox (visible)
+                        if (recaptchaWidgetId !== null) {
+                            // Get the response token from the checkbox
+                            const token = grecaptcha.getResponse(recaptchaWidgetId);
+                            
+                            if (!token) {
+                                // User hasn't checked the CAPTCHA box
+                                showValidationPopup('يرجى التحقق من صندوق reCAPTCHA قبل الإرسال');
+                                submitBtn.disabled = false;
+                                submitBtn.innerHTML = '<span class="flex items-center justify-center gap-2"><span>إرسال المساعدة</span><span>🚀</span></span>';
+                                return;
+                            }
+                            
+                            // Add token to form data
+                            formData.recaptchaToken = token;
+                            submitFormData(formData, submitBtn);
+                        } else {
+                            // Widget not initialized yet
+                            showValidationPopup('جارٍ تحميل reCAPTCHA. يرجى المحاولة مرة أخرى.');
+                            submitBtn.disabled = false;
+                            submitBtn.innerHTML = '<span class="flex items-center justify-center gap-2"><span>إرسال المساعدة</span><span>🚀</span></span>';
+                        }
+                    }
+                });
+            } else {
+                // No CAPTCHA configured, proceed directly
+                submitFormData(formData, submitBtn);
+            }
         });
+
+        // Function to submit form data
+        function submitFormData(formData, submitBtn) {
+            submitBtn.innerHTML = '<span class="flex items-center justify-center gap-2"><span>جاري الإرسال...</span><span>⏳</span></span>';
+            
+            // Send data to Google Sheets (if URL is configured)
+            if (GOOGLE_SCRIPT_URL && GOOGLE_SCRIPT_URL.trim() !== '') {
+                fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors', // Required for Google Apps Script
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                })
+                .then(() => {
+                    // Success - show popup
+                    showThankYouPopup();
+                    resetForm();
+                })
+                .catch((error) => {
+                    // Error handling
+                    console.error('Error:', error);
+                    // Still show success popup (no-cors mode doesn't return response)
+                    // In production, you might want to show an error popup
+                    showThankYouPopup();
+                    resetForm();
+                })
+                .finally(() => {
+                    // Re-enable submit button
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<span class="flex items-center justify-center gap-2"><span>إرسال المساعدة</span><span>🚀</span></span>';
+                });
+            } else {
+                // No Google Sheets URL configured - just show popup
+                console.warn('Google Sheets URL not configured. Data not saved.');
+                showThankYouPopup();
+                resetForm();
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<span class="flex items-center justify-center gap-2"><span>إرسال المساعدة</span><span>🚀</span></span>';
+            }
+        }
+
+        function resetForm() {
+            // Reset form
+            document.getElementById('helpForm').reset();
+            // Reset all question forms to first one
+            const questionForms = document.querySelectorAll('.question-form-block');
+            if (questionForms.length > 0) {
+                const firstForm = questionForms[0];
+                questionsContainer.innerHTML = '';
+                questionsContainer.appendChild(firstForm);
+                // Clear first form
+                firstForm.querySelectorAll('input[type="text"]').forEach(input => input.value = '');
+                firstForm.querySelectorAll('select').forEach(select => select.value = '');
+                // Re-initialize letter dropdowns
+                initializeLetterDropdowns();
+            }
+            // Reset reCAPTCHA (only for v2, v3 doesn't need reset)
+            if (RECAPTCHA_VERSION === 'v2' && recaptchaWidgetId !== null && typeof grecaptcha !== 'undefined') {
+                grecaptcha.reset(recaptchaWidgetId);
+            }
+        }
 
         function showThankYouPopup() {
             document.getElementById('thankYouPopup').classList.remove('hidden');
